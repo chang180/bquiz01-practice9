@@ -23,6 +23,7 @@ class DB
             $sql .= " WHERE " . implode(" && ", $tmp);
         }
         $sql .= $arg[1] ?? "";
+        // echo $sql;
         return $this->pdo->query($sql)->fetchAll();
     }
     public function count(...$arg)
@@ -62,8 +63,8 @@ class DB
         if (isset($arg['id'])) {
             foreach ($arg as $k => $v) $tmp[] = "`$k`='$v'";
             $sql = sprintf("UPDATE %s SET %s WHERE `id`='%s'", $this->table, implode(",", $tmp), $arg['id']);
-        }
-        $sql = sprintf("INSERT INTO %s (`%s`) VALUES ('%s')", $this->table, implode("`,`", array_keys($arg)), implode("','", $arg));
+        }else $sql = sprintf("INSERT INTO %s (`%s`) VALUES ('%s')", $this->table, implode("`,`", array_keys($arg)), implode("','", $arg));
+        echo $sql;
         return $this->pdo->exec($sql);
     }
 }

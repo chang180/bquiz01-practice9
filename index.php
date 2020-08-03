@@ -30,6 +30,27 @@
 				<div id="menuput" class="dbor">
 					<!--主選單放此-->
 					<span class="t botli">主選單區</span>
+					<?php
+					$menus = $Menu->all(['parent' => 0]);
+					foreach ($menus as $m) {
+					?>
+						<div class="mainmu"><a href="<?= $m['text']; ?>"><?= $m['name']; ?></a>
+						<div class="mw">
+
+							<?php
+						$subs = $Menu->all(['parent' => $m['id']]);
+						foreach ($subs as $s) {
+							?>
+							<div class="mainmu2"><a href="<?= $s['text']; ?>"><?= $s['name']; ?></a></div>
+							<?php
+						}
+						?>
+						</div>
+						</div>
+					<?php
+					}
+					?>
+
 				</div>
 				<div class="dbor" style="margin:3px; width:95%; height:20%; line-height:100px;">
 					<span class="t">進站總人數 :
@@ -42,26 +63,22 @@
 			$file = "front/" . $do . ".php";
 			include file_exists($file) ? $file : "front/main.php";
 			?>
-			<div id="alt" style="position: absolute; width: 350px; min-height: 100px; word-break:break-all; text-align:justify;  background-color: rgb(255, 255, 204); top: 50px; left: 400px; z-index: 99; display: none; padding: 5px; border: 3px double rgb(255, 153, 0); background-position: initial initial; background-repeat: initial initial;"></div>
+			<script>
+// $(".mainmu").hover(function(){
+// 	$(this).find(".mainmu2").toggle();
+// });
 
-			<script>
-				$(".sswww").hover(
-					function() {
-						$("#alt").html("" + $(this).children(".all").html() + "").css({
-							"top": $(this).offset().top - 50
-						})
-						$("#alt").show()
-					}
-				)
-				$(".sswww").mouseout(
-					function() {
-						$("#alt").hide()
-					}
-				)
-			</script>
-			<script>
 				var lin = new Array();
+				<?php
+				$rows = $Mvim->all(['sh' => 1]);
+				foreach ($rows as $row) {
+				?>
+					lin.push("img/<?= $row['name']; ?>");
+				<?php
+				}
+				?>
 				var now = 0;
+				ww();
 				if (lin.length > 1) {
 					setInterval("ww()", 3000);
 					now = 1;
@@ -77,24 +94,39 @@
 			</script>
 			<div class="di di ad" style="height:540px; width:23%; padding:0px; margin-left:22px; float:left; ">
 				<!--右邊-->
-				<button style="width:100%; margin-left:auto; margin-right:auto; margin-top:2px; height:50px;" onclick="lo('?do=admin')">管理登入</button>
+				<button style="width:100%; margin-left:auto; margin-right:auto; margin-top:2px; height:50px;" onclick="lo('?do=login')">管理登入</button>
 				<div style="width:89%; height:480px;" class="dbor">
 					<span class="t botli">校園映象區</span>
+					<div class="cent">
+						<img src="icon/up.jpg" onclick="pp(1)">
+						<?php
+						$images = $Image->all(['sh' => 1]);
+						foreach ($images as $key=>$row) {
+						?>
+							<div class="im" id="ssaa<?= $key; ?>"><img src="img/<?= $row['name']; ?>" style="width:150px;height:103px"></div>
+						<?php
+						}
+						?>
+						<img src="icon/dn.jpg" onclick="pp(2)">
+
+					</div>
+
 					<script>
 						var nowpage = 0,
-							num = 0;
+							num = <?= count($images); ?>;
 
 						function pp(x) {
 							var s, t;
 							if (x == 1 && nowpage - 1 >= 0) {
 								nowpage--;
 							}
-							if (x == 2 && (nowpage + 1) * 3 <= num * 1 + 3) {
+							if (x == 2 && (nowpage + 1) <= num * 1 - 3) {
 								nowpage++;
 							}
 							$(".im").hide()
 							for (s = 0; s <= 2; s++) {
 								t = s * 1 + nowpage * 1;
+								// console.log("#ssaa" + t)
 								$("#ssaa" + t).show()
 							}
 						}
